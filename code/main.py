@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-class vertex(object):
+class Vertex(object):
      label = None
      value = None
-     edge = []
+     edges = []
      
      def __init__(self,label):
           self.label = label
      
-
      def set_label(self, label):
           self.label = label
 
      def get_label(self):
           label = self.label
           return label
-
      
      def set_value(self, value):
           self.value = value
@@ -25,18 +23,17 @@ class vertex(object):
           value = self.value
           return value
 
-
      def add_edge(self, edge):
-          self.edge.append(edge)
+          self.edges.append(edge)
 
      def remove_edge(self, edge):
-          self.edge.remove(egde)
+          self.edges.remove(edge)
 
-     def get_edge(self):
-          edge = self.edge
-          return edge
+     def get_edges(self):
+          edges = self.edges
+          return edges
 
-class egde(object):
+class Edge(object):
      label = None
      value = None
      direction= [None,None]
@@ -44,7 +41,6 @@ class egde(object):
      def __init__(self, label):
           self.label = label
 
-
      def set_label(self, label):
           self.label = label
 
@@ -52,14 +48,12 @@ class egde(object):
           label = self.label
           return label
 
-
      def set_value(self, value):
           self.value = value
 
      def get_value(self):
           value = self.value
           return value
-
 
      def set_direction(self, v1, v2):
           self.direction[0] = v1
@@ -74,3 +68,20 @@ class egde(object):
 class Grafo(object):
      vertexes = []
      is_directional = False
+     
+     def __init__(self, vertexes):
+          self.vertexes = vertexes
+     
+     def add_vertex(self, label, value=None):
+          v = Vertex(label)
+          v.set_value(value)
+          self.vertexes.append(v)
+     
+     def remove_vertex(self, vertex):
+          self.vertexes.remove(vertex)
+     
+     def connect_vertex(self, label, v1, v2):
+          e = Edge(label)
+          e.set_direction(v1, v2)
+          v1.add_edge(e)
+          v2.add_edge(e)
