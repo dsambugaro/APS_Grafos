@@ -65,7 +65,7 @@ class Edge(object):
      def set_output(self, vertice):
           self.direction[1] = vertice
 
-class Grafo(object):
+class Graph(object):
      vertexes = []
      is_directional = False
      
