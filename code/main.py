@@ -66,7 +66,9 @@ class Edge(object):
           self.direction[1] = vertice
 
 class Graph(object):
+     graph = {}
      vertexes = []
+     edges = []
      is_directional = False
      
      def __init__(self, vertexes):
@@ -76,12 +78,67 @@ class Graph(object):
           v = Vertex(label)
           v.set_value(value)
           self.vertexes.append(v)
-     
+
      def remove_vertex(self, vertex):
           self.vertexes.remove(vertex)
      
+     def find_vertex(self, value, search_type='label', answer_type='index'):
+          occurrences = []
+          try:
+               for i in range(len(self.vertexes)):
+                    if search_type == 'label':
+                         if self.vertexes[i].get_label() == value:
+                              if answer_type == 'index':
+                                   occurrences.append(i)
+                              elif answer_type == 'obj':
+                                   occurrences.append(self.vertexes[i])
+                              else:
+                                   raise Exception('Invalid answer type')
+                    elif search_type == 'value':
+                         if self.vertexes[i].get_value() == value:
+                              if answer_type == 'index':
+                                   occurrences.append(i)
+                              elif answer_type == 'obj':
+                                   occurrences.append(self.vertexes[i])
+                              else:
+                                   raise Exception('Invalid answer type')
+                    else:
+                         raise Exception('Invalid search type')
+               return occurrences
+          except Exception as e:
+               print('An Error has occured.')
+               print(e)
+     
+     def find_edge(self, value, search_type='label', answer_type='index'):
+          occurrences = []
+          try:
+               for i in range(len(self.vertexes)):
+                    if search_type == 'label':
+                         if self.edges[i].get_label() == value:
+                              if answer_type == 'index':
+                                   occurrences.append(i)
+                              elif answer_type == 'obj':
+                                   occurrences.append(self.edges[i])
+                              else:
+                                   raise Exception('Invalid answer type')
+                    elif search_type == 'value':
+                         if self.edges[i].get_value() == value:
+                              if answer_type == 'index':
+                                   occurrences.append(i)
+                              elif answer_type == 'obj':
+                                   occurrences.append(self.edges[i])
+                              else:
+                                   raise Exception('Invalid answer type')
+                    else:
+                         raise Exception('Invalid search type')
+               return occurrences
+          except Exception as e:
+               print('An Error has occured.')
+               print(e)
+
      def connect_vertex(self, label, v1, v2):
           e = Edge(label)
           e.set_direction(v1, v2)
           v1.add_edge(e)
           v2.add_edge(e)
+          self.edges.append(e)
