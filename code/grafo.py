@@ -94,14 +94,14 @@ class Graph(object):
                print("Error:", error)
                print("This vertex wasn't found in the Graph")
 
-     def find_vertex(self, vertex):
+     def get_vertex(self, vertex):
           try:
                v = self.graph[vertex]
                return v
           except KeyError as error:
                return None
 
-     def find_edge(self, edge):
+     def get_edge(self, edge):
           raise NotImplementedError('Function not implemented')
 
      def connect_vertex(self, label, vertex_list, value=None):
@@ -133,4 +133,56 @@ class Graph(object):
           lista[fila[0]]['cor'] = 'cinza'
           lista[fila[0]]['distancia'] = 0
 
-          # while 
+     # retorna a ordem do grafo -> "bolinhas"
+     def get_ordem(self):
+          return len(list(self.graph.keys()))
+
+     # retorna o grau de um grafo
+     def get_grau(self, vertex):
+          return len(self.graph[vertex]['edges'].keys())
+
+     # retorna uma lista de todos os vertes adjacentes
+     def get_adjacentes(self, vertex):
+          adjacente = []
+          for e in self.graph[vertex]['edges']:
+               adjacente.append(e['to'])
+          return adjacente
+
+     # retorna todos os vertices
+     def get_vertexes(self):
+          return list(self.graph.keys())
+     
+     def is_complete(self):
+          raise NotImplementedError('Function not implemented')
+
+     # retorna true se for conexo, caso contrário retorna false
+     def is_conexo(self):
+          lista = get_vertexes()
+          for e in self.graph[lista[0]]['edges']:
+               lista.pop(e['to'])
+
+          if(lista == None):
+               return True
+          return False
+
+     # retorna true se for completa, caso contrário, retorna false
+     def is_complete(self):
+          conexo = is_conexo()
+          if(conexo == True):
+               # formula para calcular um grafo completo
+               ordem = get_ordem()
+               qtd = (ordem * (ordem-1))/2
+
+               vertices = get_vertexes()
+               grau = 0
+               for v in vertices:
+                    grau += get_grau(v)
+               
+               if (grau/2) == qtd:
+                    return True
+               return False
+          
+
+
+
+
