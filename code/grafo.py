@@ -30,17 +30,17 @@ class Graph(object):
                                                             if vertex_list[value_edges]['to'] in list(vertex_list.keys()) or vertex_list[value_edges]['to'] in list(self.graph.keys()) and not self.is_directional:
                                                                  self.graph[value] = vertex_list[value]
                                                             else:
-                                                                 raise ValueError("One or more connected vertex don't exists")
+                                                                 raise ValueError("One or more connected vertexes don't exist")
                                                        else:
-                                                            raise TypeError('One or more connected vertex has an invalid type as the label')
+                                                            raise TypeError('One or more connected vertexes have an invalid label type')
                                                   else:
-                                                       raise SyntaxError("One or more edges don't have the fields 'to' or 'value'")
+                                                       raise SyntaxError("One or more edges don't have the field 'to' or 'value'")
                                              else:
-                                                  raise TypeError('One or more edge has an invalid type as the label')
+                                                  raise TypeError('One or more edges have an invalid label type')
                                    else:
-                                        raise SyntaxError("One or more edges don't have the fields 'to' or 'value'")
+                                        raise SyntaxError("One or more edges don't have the field 'to' or 'value'")
                               else:
-                                   raise TypeError('One or more vertex has an invalid type as the label')
+                                   raise TypeError('One or more vertexes have an invalid type as the label')
                else:
                     for vertex in vertex_list:
                          if type(vertex) is tuple:
@@ -50,36 +50,36 @@ class Graph(object):
                                         self.edges_count += 1
                                         e['e'+str(self.edges_count)] = {'to': vertex[i], 'value':None}
                                    else:
-                                        raise TypeError('One or more edges has an invalid type as the label')
+                                        raise TypeError('One or more edges have an invalid label type')
                               if type(vertex[0]) in (int, float, str):
                                    graph[vertex[0]] = {'value':None, 'edges': e}
                               else:
-                                   raise TypeError('One or more edges has an invalid type as the label')
+                                   raise TypeError('One or more edges have an invalid label type')
                          elif type(vertex) in (int, float, str):
                               self.graph[vertex] = {'value':None, 'edges':{}}
                          else:
-                              raise TypeError('One or more vertex has an invalid type as the label')
+                              raise TypeError('One or more vertexes have an invalid label type')
           except TypeError as error:
-               print("Error:", error)
+               print("Error: ", error)
                print('Please use only integer, float or string values for labels.')
                self.__print_dict_usage()
           except ValueError as error:
-               print("Error:", error)
-               print("The created Graph isn't directional. Please check your edges connections.")
+               print("Error: ", error)
+               print("The created Graph isn't directional. Please check your edge connections.")
                self.__print_dict_usage()
           except SyntaxError as error:
-               print("Error:", error)
+               print("Error: ", error)
                self.__print_dict_usage()
 
      def add_vertex_value(self, vertex, value):
           try:
                self.graph[vertex]['value'] = value
           except KeyError as error:
-               print("Error:", error)
+               print("Error: ", error)
                print("This vertex wasn't found in the Graph")
 
      def add_edge_value(self, edge, value):
-          raise NotImplementedError('Function not implemented')
+          raise NotImplementedError('Function not yet implemented')
 
      def remove_vertex(self, vertex):
           try:
@@ -91,7 +91,7 @@ class Graph(object):
                               self.graph[edge['to']]['edges'].pop(e)
 
           except KeyError as error:
-               print("Error:", error)
+               print("Error: ", error)
                print("This vertex wasn't found in the Graph")
 
      def find_vertex(self, vertex):
@@ -102,7 +102,7 @@ class Graph(object):
                return None
 
      def find_edge(self, edge):
-          raise NotImplementedError('Function not implemented')
+          raise NotImplementedError('Function not yet implemented')
 
      def connect_vertex(self, label, vertex_list, value=None):
           try:
@@ -113,10 +113,10 @@ class Graph(object):
                                    self.edges_count += 1
                                    self.graph[vertex_list[i]]['edges'][label]['to'] = vertex_list[j]
                else:
-                    ValueError("One or more connected vertex don't exists")
+                    ValueError("One or more connected vertexes don't exist")
           except ValueError as error:
-               print("Error:", error)
-               print("Please check your edges connections.")
+               print("Error: ", error)
+               print("Please check your edge connections.")
 
      def breadth_first_search(self, v_init):
           control = {
