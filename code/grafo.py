@@ -3,148 +3,120 @@
 
 from sys import maxsize
 
-class Vertex(object):
-     label = None
-     value = None
-     edges = []
-     
-     def __init__(self,label):
-          self.label = label
-     
-     def set_label(self, label):
-          self.label = label
-
-     def get_label(self):
-          label = self.label
-          return label
-     
-     def set_value(self, value):
-          self.value = value
-
-     def get_value(self):
-          value = self.value
-          return value
-
-     def add_edge(self, edge):
-          self.edges.append(edge)
-
-     def remove_edge(self, edge):
-          self.edges.remove(edge)
-
-     def get_edges(self):
-          edges = self.edges
-          return edges
-
-class Edge(object):
-     label = None
-     value = None
-     direction= [None,None]
-
-     def __init__(self, label):
-          self.label = label
-
-     def set_label(self, label):
-          self.label = label
-
-     def get_label(self):
-          label = self.label
-          return label
-
-     def set_value(self, value):
-          self.value = value
-
-     def get_value(self):
-          value = self.value
-          return value
-
-     def set_direction(self, v1, v2):
-          self.direction[0] = v1
-          self.direction[1] = v2
-     
-     def set_input(self, vertice):
-          self.direction[0] = vertice
-     
-     def set_output(self, vertice):
-          self.direction[1] = vertice
-
 class Graph(object):
-     graph = {}
-     vertexes = []
-     edges = []
+     graph = None
+     edges_count = None
      is_directional = False
-     
+
      def __init__(self, vertexes):
-          self.vertexes = vertexes
-     
-     def add_vertex(self, label, value=None):
-          v = Vertex(label)
-          v.set_value(value)
-          self.vertexes.append(v)
+          self.graph = {}
+          self.edges_count = 0
+          self.add_vertex(vertexes)
+
+     def __print_dict_usage(self):
+          print('For dictionary entry, follow the template:')
+          print("[{\n\t<vertex_label>: {\n\t\t'value':<vertex_value>,\n\t\t'edges': {\n\t\t\t<edge_label>: {\n\t\t\t\t'to':<connected_vertex\'s_label>,\n\t\t\t\t'value':<edge_value>\n\t\t\t}\n\t\t}\n\t}\n}"])
+
+     def add_vertex(self, vertex_list):
+          try:
+               if type(vertex_list) in (dict):
+                         for key, value in enumerate(vertex_list):
+                              if type(value in (int, float, str)):
+                                   if set(('value', 'edges')) <= set(vertex_list[value]):
+                                        for key_edges, value_edges in vertex_list[value]['edges']:
+                                             if type(value_edges in (int, float, str)):
+                                                  if set(('to', 'value')) <= set(vertex_list[value_edges]):
+                                                       if type(vertex_list[value_edges]['to']) in (int, float, str):
+                                                            if vertex_list[value_edges]['to'] in list(vertex_list.keys()) or vertex_list[value_edges]['to'] in list(self.graph.keys()) and not self.is_directional:
+                                                                 self.graph[value] = vertex_list[value]
+                                                            else:
+                                                                 raise ValueError("One or more connected vertex don't exists")
+                                                       else:
+                                                            raise TypeError('One or more connected vertex has an invalid type as the label')
+                                                  else:
+                                                       raise SyntaxError("One or more edges don't have the fields 'to' or 'value'")
+                                             else:
+                                                  raise TypeError('One or more edge has an invalid type as the label')
+                                   else:
+                                        raise SyntaxError("One or more edges don't have the fields 'to' or 'value'")
+                              else:
+                                   raise TypeError('One or more vertex has an invalid type as the label')
+               else:
+                    for vertex in vertex_list:
+                         if type(vertex) is tuple:
+                              e = {}
+                              for i in range(1, len(vertex)):
+                                   if type(vertex[i]) in (int, float, str):
+                                        self.edges_count += 1
+                                        e['e'+str(self.edges_count)] = {'to': vertex[i], 'value':None}
+                                   else:
+                                        raise TypeError('One or more edges has an invalid type as the label')
+                              if type(vertex[0]) in (int, float, str):
+                                   graph[vertex[0]] = {'value':None, 'edges': e}
+                              else:
+                                   raise TypeError('One or more edges has an invalid type as the label')
+                         elif type(vertex) in (int, float, str):
+                              self.graph[vertex] = {'value':None, 'edges':{}}
+                         else:
+                              raise TypeError('One or more vertex has an invalid type as the label')
+          except TypeError as error:
+               print("Error:", error)
+               print('Please use only integer, float or string values for labels.')
+               self.__print_dict_usage()
+          except ValueError as error:
+               print("Error:", error)
+               print("The created Graph isn't directional. Please check your edges connections.")
+               self.__print_dict_usage()
+          except SyntaxError as error:
+               print("Error:", error)
+               self.__print_dict_usage()
+
+     def add_vertex_value(self, vertex, value):
+          try:
+               self.graph[vertex]['value'] = value
+          except KeyError as error:
+               print("Error:", error)
+               print("This vertex wasn't found in the Graph")
+
+     def add_edge_value(self, edge, value):
+          raise NotImplementedError('Function not implemented')
 
      def remove_vertex(self, vertex):
-          self.vertexes.remove(vertex)
-     
-     def find_vertex(self, value, search_type='label', answer_type='index'):
-          occurrences = []
           try:
-               for i in range(len(self.vertexes)):
-                    if search_type == 'label':
-                         if self.vertexes[i].get_label() == value:
-                              if answer_type == 'index':
-                                   occurrences.append(i)
-                              elif answer_type == 'obj':
-                                   occurrences.append(self.vertexes[i])
-                              else:
-                                   raise Exception('Invalid answer type')
-                    elif search_type == 'value':
-                         if self.vertexes[i].get_value() == value:
-                              if answer_type == 'index':
-                                   occurrences.append(i)
-                              elif answer_type == 'obj':
-                                   occurrences.append(self.vertexes[i])
-                              else:
-                                   raise Exception('Invalid answer type')
-                    else:
-                         raise Exception('Invalid search type')
-               return occurrences
-          except Exception as e:
-               print('An Error has occured.')
-               print(e)
-     
-     def find_edge(self, value, search_type='label', answer_type='index'):
-          occurrences = []
+               v = self.graph.pop(vertex)
+               for edge in v['edges']:
+                    for e in self.graph[edge['to']]['edges']:
+                         if e['to'] == vertex:
+                              self.edges_count -= 1
+                              self.graph[edge['to']]['edges'].pop(e)
+
+          except KeyError as error:
+               print("Error:", error)
+               print("This vertex wasn't found in the Graph")
+
+     def find_vertex(self, vertex):
           try:
-               for i in range(len(self.vertexes)):
-                    if search_type == 'label':
-                         if self.edges[i].get_label() == value:
-                              if answer_type == 'index':
-                                   occurrences.append(i)
-                              elif answer_type == 'obj':
-                                   occurrences.append(self.edges[i])
-                              else:
-                                   raise Exception('Invalid answer type')
-                    elif search_type == 'value':
-                         if self.edges[i].get_value() == value:
-                              if answer_type == 'index':
-                                   occurrences.append(i)
-                              elif answer_type == 'obj':
-                                   occurrences.append(self.edges[i])
-                              else:
-                                   raise Exception('Invalid answer type')
-                    else:
-                         raise Exception('Invalid search type')
-               return occurrences
-          except Exception as e:
-               print('An Error has occured.')
-               print(e)
+               v = self.graph[vertex]
+               return v
+          except KeyError as error:
+               return None
 
-     def connect_vertex(self, label, v1, v2):
-          e = Edge(label)
-          e.set_direction(v1, v2)
-          v1.add_edge(e)
-          v2.add_edge(e)
-          self.edges.append(e)
+     def find_edge(self, edge):
+          raise NotImplementedError('Function not implemented')
 
+     def connect_vertex(self, label, vertex_list, value=None):
+          try:
+               if set(vertex_list) <= set(self.graph):
+                    for i in range(len(vertex_list)):
+                         for j in range(len(vertex_list)):
+                              if i != j:
+                                   self.edges_count += 1
+                                   self.graph[vertex_list[i]]['edges'][label]['to'] = vertex_list[j]
+               else:
+                    ValueError("One or more connected vertex don't exists")
+          except ValueError as error:
+               print("Error:", error)
+               print("Please check your edges connections.")
 
      def breadth_first_search(self, v_init):
           control = {
@@ -152,15 +124,13 @@ class Graph(object):
                'distancia': maxsize,
                'predecessor': None
           }   
-          lista = list()
-          for i in len(self.vertexes): # criado para preencher a lista de controle
-               lista.append(control)
+          lista = {}
+          for key, value in enumerate(self.graph):
+               lista[value] = control
 
-          
-          # for i in len(self.vertexes): # para acessar a lista de controle
-          fila = list()
+          fila = []
           fila.append(v_init)
-          lista[self.vertexes.index(fila[0])]['cor'] = 'cinza'
-          lista[self.vertexes.index(fila[0])]['distancia'] = 0
+          lista[fila[0]]['cor'] = 'cinza'
+          lista[fila[0]]['distancia'] = 0
 
-          while 
+          # while 
