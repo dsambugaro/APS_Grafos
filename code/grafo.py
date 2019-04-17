@@ -48,7 +48,16 @@ class Graph(object):
                               for i in range(1, len(vertex)):
                                    if type(vertex[i]) in (int, float, str):
                                         self.edges_count += 1
-                                        e['e'+str(self.edges_count)] = {'to': vertex[i], 'value':None}
+                                        edge_label = 'e'+str(self.edges_count)
+                                        e[edge_label] = {'to': vertex[i], 'value':None}
+                                        if not set(vertex[i]) <= set(self.graph):
+                                             if type(vertex[i]) in (int, float, str):
+                                                  if not self.is_directional:
+                                                       graph[vertex[i]] = {'value':None, 'edges': {edge_label:{'to': vertex[0], 'value':None}}}
+                                                  else:
+                                                       graph[vertex[i]] = {'value':None, 'edges': {}}
+                                             else:
+                                                  raise TypeError('One or more edges has an invalid type as the label')
                                    else:
                                         raise TypeError('One or more edges has an invalid type as the label')
                               if type(vertex[0]) in (int, float, str):
@@ -106,6 +115,8 @@ class Graph(object):
 
      def connect_vertex(self, label, vertex_list, value=None):
           try:
+               if len(vertex_list) > 2:
+                    ValueError("One or more connected vertex don't exists")
                if set(vertex_list) <= set(self.graph):
                     for i in range(len(vertex_list)):
                          for j in range(len(vertex_list)):
