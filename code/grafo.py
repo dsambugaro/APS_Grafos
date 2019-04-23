@@ -177,13 +177,8 @@ class Graph(object):
      def get_order(self):
           return len(list(self.graph.keys()))
 
-<<<<<<< HEAD
      # retorna o grau de um vertice
-     def get_grau(self, vertex):
-=======
-     # retorna o grau de um grafo
      def get_degree(self, vertex):
->>>>>>> 7c7206cf1cfbdb03751ec5b4e26616e9c7219794
           return len(self.graph[vertex]['edges'].keys())
 
      # retorna uma lista de todos os vertes adjacentes
@@ -229,7 +224,6 @@ class Graph(object):
 
      # retorna true se for completa, caso contrário, retorna false
      def is_complete(self):
-<<<<<<< HEAD
           conexo = is_conexo()
           if(conexo == True):
                # formula para calcular um grafo completo
@@ -266,10 +260,8 @@ class Graph(object):
 
 
 # prova -> até ordenação topológica
-=======
           vertexes = self.get_vertexes()
           for vertex in vertexes:
                if self.get_degree(vertex) != self.get_order()-1:
                     return False
           return True
->>>>>>> 7c7206cf1cfbdb03751ec5b4e26616e9c7219794
