@@ -120,6 +120,7 @@ class Graph(object):
                print("Error: ", error)
                print("Please check your edge connections.")
 
+     # busca em largura
      def breadth_first_search(self, v_init):
           control = {
                'cor': 'branco',
@@ -135,12 +136,30 @@ class Graph(object):
           lista[fila[0]]['cor'] = 'cinza'
           lista[fila[0]]['distancia'] = 0
 
+     # Busca em profundidade
+     # def Depth_first_Search():
+     #      control = {
+     #           'cor' = 'branco',
+     #           'predecessor' = None
+     #      }
+     #      tempo = 0
+     #      lista = {}
+     #      for key, value in enumerate(self.graph):
+     #           lista[value] = control
+
+     #      fila = []
+          
+
+
+
+
+
 
      # retorna a ordem do grafo -> "bolinhas"
      def get_ordem(self):
           return len(list(self.graph.keys()))
 
-     # retorna o grau de um grafo
+     # retorna o grau de um vertice
      def get_grau(self, vertex):
           return len(self.graph[vertex]['edges'].keys())
 
@@ -185,3 +204,24 @@ class Graph(object):
                     return True
                return False
           
+     # def get_arestas():
+     #      lista = get_vertexes()
+     #      for e in self.graph[lista[0]]['edges']:
+     #           lista.pop(e['to'])
+
+
+
+
+
+
+     # # isArvore() – retorna True/False se o grafo é uma árvore
+     # def is_arvore(self): # propriedades de uma arvore... vertice - 1 = aresta e tem que ser conexo
+     #      if(is_conexo == True):
+     #           quant_vertices = get_ordem() #retorna a quantidade de  vertices
+     #           quant_aresta = get_arestas()
+
+
+
+
+
+# prova -> até ordenação topológica
