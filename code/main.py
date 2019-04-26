@@ -4,18 +4,14 @@
 from grafo import Graph
 
 def main():
-     graph = {
-          'a':{'value':None, 'edges':{'e1':{'to':'b','value':None}, 'e5':{'to':'c','value':None}}},
-          'b':{'value':None, 'edges':{'e1':{'to':'a','value':None},'e4':{'to':'c','value':None}}},
-          'c':{'value':None, 'edges':{'e5':{'to':'a','value':None}}}
-     }
-     G = Graph(graph)
+     graph_example = [('s','r','w'),('r','v'),('w','t','x'),('t','x','u'), ('x','y'),('u','y')]
+     G = Graph(graph_example)
      print("\n\n")
      print("Graph:\n")
      for x in G.graph:
-          print (x)
+          print ('Vertex: ',x)
           for y in G.graph[x]:
-               print (y,':',G.graph[x][y])
+               print ('\t', y,':',G.graph[x][y])
      print("\n==========================================\n")
      vertexes = G.get_vertexes()
      print("Vertexes: ", vertexes)
@@ -25,6 +21,21 @@ def main():
      print("Order: ", G.get_order())
      print("is_connected: ", G.is_connected())
      print("is_complete: ", G.is_complete())
+     
+     print('\n\n')
+     
+     print('Breadth First Search: ')
+     G.breadth_first_search('s',print_search_attributes=True)
+     
+     print('\n\n')
+
+     print('Deep First Search: ')
+     G.deep_first_search(print_search_attributes=True)
+     
+     print('\n\n')
+
+     print('Transitive Closure: {}'.format(G.get_transitive_closure(vertexes[0])))
+     print('Inverse Transitive Closure: {}'.format(G.get_inverse_transitive_closure(vertexes[0])))
 
 if __name__ == '__main__':
      main()

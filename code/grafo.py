@@ -3,12 +3,14 @@ from sys import maxsize
 class Graph(object):
      graph = None
      edges_count = None
-     is_directional = False
+     is_directional = None
 
-     def __init__(self, vertexes):
+     def __init__(self, vertexes, directional=False):
           self.graph = {}
           self.edges_count = 0
+          self.is_directional = directional
           self.add_vertex(vertexes)
+          self.time = 0
 
      def __print_dict_usage(self):
           print('For dictionary entry, follow the template:')
@@ -59,7 +61,10 @@ class Graph(object):
                                         if not set(vertex[i]) <= set(self.graph):
                                              if type(vertex[i]) in (int, float, str):
                                                   if not self.is_directional:
-                                                       self.graph[vertex[i]] = {'value':None, 'edges': {edge_label:{'to': vertex[0], 'value':None}}}
+                                                       if vertex[i] in list(self.graph.keys()):
+                                                            self.graph[vertex[i]]['edges'][edge_label] = {'to': vertex[0], 'value':None}
+                                                       else:
+                                                            self.graph[vertex[i]] = {'value':None, 'edges': {edge_label:{'to': vertex[0], 'value':None}}}
                                                   else:
                                                        self.graph[vertex[i]] = {'value':None, 'edges': {}}
                                              else:
@@ -67,7 +72,11 @@ class Graph(object):
                                    else:
                                         raise TypeError('One or more edges have an invalid label type')
                               if type(vertex[0]) in (int, float, str):
-                                   self.graph[vertex[0]] = {'value':None, 'edges': e}
+                                   if vertex[0] in list(self.graph.keys()):
+                                        for edge in list(e.keys()):
+                                             self.graph[vertex[0]]['edges'][edge] = e[edge]
+                                   else:
+                                        self.graph[vertex[0]] = {'value':None, 'edges': e}
                               else:
                                    raise TypeError('One or more edges have an invalid label type')
                          elif type(vertex) in (int, float, str):
@@ -138,22 +147,6 @@ class Graph(object):
                print("Error: ", error)
                print("Please check your edge connections.")
 
-     def breadth_first_search(self, v_init):
-          control = {
-               'cor': 'branco',
-               'distancia': maxsize,
-               'predecessor': None
-          }   
-          lista = {}
-          for key, value in enumerate(self.graph):
-               lista[value] = control
-
-          fila = []
-          fila.append(v_init)
-          lista[fila[0]]['cor'] = 'cinza'
-          lista[fila[0]]['distancia'] = 0
-
-
      # retorna a ordem do grafo -> "bolinhas"
      def get_order(self):
           return len(list(self.graph.keys()))
@@ -210,3 +203,103 @@ class Graph(object):
                if self.get_degree(vertex) != self.get_order()-1:
                     return False
           return True
+     
+     def breadth_first_search(self, v_init, print_search_attributes=False, cicle_detection=False):
+          vertexes = self.get_vertexes()
+          index_init = vertexes.index(v_init)
+
+          color = {}
+          distance = {}
+          predecessor = {}
+          queue = []
+
+          for vertex in vertexes:
+               color[vertex] = 'white'
+               distance[vertex] = maxsize
+               predecessor[vertex] = []
+          
+          color[vertexes[index_init]] = 'grey'
+          distance[vertexes[index_init]] = 0
+          queue.append(vertexes[index_init])
+
+          while queue:
+               u = queue.pop(0)
+               for v in self.get_neighborhood(u):
+                    if color[v] == 'white':
+                         color[v] = 'grey'
+                         distance[v] = distance[u] + 1
+                         predecessor[v].append(u)
+                         queue.append(v)
+                    if color[v] == 'grey' and u not in predecessor[v] and cicle_detection:
+                         return True
+                    color[u] = 'black'
+          if print_search_attributes:
+               for vertex in vertexes:
+                    print('Vertex {}:\n\tColor: {}\n\tDistance: {}\n\tPredecessors: {}'.format(vertex, color[vertex], distance[vertex], predecessor[vertex]))
+
+          if cicle_detection:
+               return False
+
+     def deep_first_search(self, print_search_attributes=False):
+          def dfs_visit(u):
+               self.time += 1
+               distance[u]['discovery_time'] = self.time
+               color[u] = 'grey'
+
+               for v in self.get_neighborhood(u):
+                    if color[v] == 'white':
+                         predecessor[v].append(u)
+                         dfs_visit(v)
+               
+               color[u] = 'black'
+               self.time += 1
+               distance[u]['end_time'] = self.time
+          
+          vertexes = self.get_vertexes()
+          color = {}
+          distance = {}
+          predecessor = {}
+
+          for vertex in vertexes:
+               color[vertex] = 'white'
+               distance[vertex] = {'discovery_time':None, 'end_time':None}
+               predecessor[vertex] = []
+
+          for vertex in vertexes:
+               if color[vertex] == 'white':
+                    dfs_visit(vertex)
+          
+          self.time = 0
+
+          if print_search_attributes:
+               for vertex in vertexes:
+                    print('Vertex {}:\n\tColor: {}\n\tDistance: {}\n\tPredecessors: {}'.format(vertex, color[vertex], distance[vertex], predecessor[vertex]))
+
+     def get_transitive_closure(self, vertex):
+          vertexes = [vertex]
+          reachable_vertexes = []
+          visited = []
+          while vertexes:
+               v = vertexes.pop(0)
+               visited.append(v)
+               for e in list(self.graph[v]['edges']):
+                    to = self.graph[v]['edges'][e]['to']
+                    if to not in reachable_vertexes:
+                         reachable_vertexes.append(to)
+
+                    if to not in visited:
+                         vertexes.append(to)
+
+          return reachable_vertexes
+     
+     def get_inverse_transitive_closure(self, vertex):
+          vertexes = self.get_vertexes()
+          reachable_vertexes = []
+
+          for v in vertexes:
+               if v != vertex:
+                    aux = self.get_transitive_closure(v)
+                    if vertex in aux and vertex not in reachable_vertexes:
+                         reachable_vertexes.append(v)
+
+          return reachable_vertexes
